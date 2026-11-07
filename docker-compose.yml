@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:11.4
+    container_name: fitguard-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-fitguard_root_123}
+      MYSQL_DATABASE: fitguard
+      MYSQL_USER: fitguard
+      MYSQL_PASSWORD: ${DB_PASSWORD:-fitguard123}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "127.0.0.1:3306:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fitguard-net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fitguard-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: mysql://fitguard:${DB_PASSWORD:-fitguard123}@db:3306/fitguard
+      JWT_SECRET: ${JWT_SECRET:-change-this-secret-in-production-min32chars}
+      # AI settings (optional - free providers available: groq, openrouter, gemini, ollama)
+      # Empty means the built-in deterministic analysis; no external service is required.
+      AI_PROVIDER: ${AI_PROVIDER:-}
+      AI_MODEL: ${AI_MODEL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_API_BASE: ${AI_API_BASE:-}
+    ports:
+      - "${PORT:-3000}:3000"
+    networks:
+      - fitguard-net
+
+networks:
+  fitguard-net:
+
+volumes:
+  db_data:

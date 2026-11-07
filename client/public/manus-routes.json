@@ -1,0 +1,18 @@
+{
+  "routes": [
+    { "path": "/", "title": "Главная" },
+    { "path": "/login", "title": "Вход" },
+    { "path": "/register", "title": "Регистрация" },
+    { "path": "/coach/dashboard", "title": "Дашборд тренера" },
+    { "path": "/coach/trainees", "title": "Подопечные" },
+    { "path": "/coach/trainees/:id", "title": "Карточка подопечного" },
+    { "path": "/coach/codes", "title": "Коды приглашений" },
+    { "path": "/trainee/dashboard", "title": "Кабинет ученика" },
+    { "path": "/trainee/workout/new", "title": "Новая тренировка" },
+    { "path": "/trainee/workout/:id", "title": "Детали тренировки" },
+    { "path": "/trainee/history", "title": "История тренировок" },
+    { "path": "/trainee/measurements", "title": "Замеры и антропометрия" },
+    { "path": "/trainee/coaches", "title": "Мои тренеры" },
+    { "path": "/profile", "title": "Профиль" }
+  ]
+}
